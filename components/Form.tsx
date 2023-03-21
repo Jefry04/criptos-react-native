@@ -1,10 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableHighlight, Alert} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
-const Form = () => {
-  const [selectedCurrency, setSelectedCurrency] = useState('');
-  const [criptoCurrency, setCriptoCurrency] = useState('');
+
+interface IFormProps {
+  selectedCurrency: string;
+  setSelectedCurrency: Dispatch<SetStateAction<string>>;
+  criptoCurrency: string;
+  setCriptoCurrency: Dispatch<SetStateAction<string>>;
+  setIsFetchApi: Dispatch<SetStateAction<boolean>>;
+}
+
+const Form: React.FC<IFormProps> = ({
+  selectedCurrency,
+  setSelectedCurrency,
+  criptoCurrency,
+  setCriptoCurrency,
+  setIsFetchApi,
+}) => {
   const [criptoCurrencies, setCriptoCurrencies] = useState([]);
 
   useEffect(() => {
@@ -26,7 +39,17 @@ const Form = () => {
     setCriptoCurrency(cripto);
   };
 
-  const quoteCurrency = () => console.log('cotizando..');
+  const quoteCurrency = () => {
+    if (selectedCurrency.trim() === '' || criptoCurrency.trim() === '') {
+      showalert();
+      return;
+    }
+    setIsFetchApi(true);
+  };
+
+  const showalert = () => {
+    Alert.alert('error...', 'ambos campos son obligatorios', [{text: 'ok'}]);
+  };
 
   return (
     <View>
